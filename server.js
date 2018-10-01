@@ -12,7 +12,7 @@ function start( externalRequest )
         // response.end();
     }
 
-    http.createServer( onRequest ).listen(80);
+    http.createServer( onRequest ).listen(443);
     console.log("server started");
 }
 
