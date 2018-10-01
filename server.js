@@ -12,7 +12,7 @@ function start( externalRequest )
         // response.end();
     }
 
-    http.createServer( onRequest ).listen(8888);
+    http.createServer( onRequest ).listen(80);
     console.log("server started");
 }
 
