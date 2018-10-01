@@ -1,6 +1,7 @@
 var icalToolkit = require('ical-toolkit');
 var request = require('request');
 var sugar = require('sugar');
+var moment = require('moment-timezone')
 // var Rx = require('rxjs');
 // var http = require('http');
 
@@ -11,9 +12,11 @@ var url = "https://dl.dropbox.com/s/edw53lkvjoawmtj/This%20Week.md?dl=1";
 sugar.extend();
 
 
+let timezone = 'America/New_York';
+
 builder.calname = "This Week";
-builder.timezone = "america/new_york";
-builder.tzide = "america/new_york";
+builder.timezone = timezone;
+builder.tzide = timezone;
 builder.method = 'REQUEST';
 
 function getCalendar( resolve, reject )
@@ -31,14 +34,20 @@ function getCalendar( resolve, reject )
     function parseIntoIcal( text )
     {
 
+
+
         let names = ['this Monday', 'this Tuesday', 'this Wednesday', 'this Thursday', 'this Friday', 'this Saturday', 'next Sunday'];
+        let formatDate = date => new Date( moment.tz( date.toUTCString(), timezone ).format() );
+
+        // console.log( formatDate( Date.create(names[0] + ' ' + '7am' ).addHours(1) ) );
+
         var days = text.match(/#[^#]*/gs)
             .map( day => day.split('\n')
             .filter( line => line.match(/^[0-9]*[a|p]m/)) )
             .map( day => day.map( parseEvent ) )
             .map( (day, i) => day.map( event => ({
-                start: Date.create( names[i] + ' ' + event.time ),
-                end: Date.create( names[i] + ' ' + event.time ).addHours(1),
+                start: formatDate( Date.create(names[i] + ' ' + event.time ) ),
+                end: formatDate( Date.create(names[i] + ' ' + event.time ).addHours(1) ),
                 transp: 'OPAQUE',
                 summary: event.label,
                 alarms: event.reminder ? [60,30,10] : [],
@@ -46,7 +55,7 @@ function getCalendar( resolve, reject )
             }) ))
             .flatten();
 
-        // console.log( days );
+        console.log( days );
         builder.events = days;
 
         return builder.toString();
