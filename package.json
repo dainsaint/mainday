@@ -1,0 +1,24 @@
+{
+  "name": "mainday",
+  "version": "1.0.0",
+  "description": "Calender helper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dainsaint/mainday.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dainsaint/mainday/issues"
+  },
+  "homepage": "https://github.com/dainsaint/mainday#readme",
+  "dependencies": {
+    "ical-toolkit": "^1.0.9",
+    "request": "^2.88.0",
+    "sugar": "^2.0.4"
+  }
+}
