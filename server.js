@@ -17,7 +17,7 @@ function start()
         response.end();
     }
 
-    http.createServer( onRequest ).listen(443);
+    http.createServer( onRequest ).listen(80);
     console.log("server started");
 }
 
