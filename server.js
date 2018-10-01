@@ -1,5 +1,6 @@
 var http = require("http");
 var parser = require("./parser");
+var port = process.env.PORT || 8080;
 
 function start()
 {
@@ -17,7 +18,7 @@ function start()
         response.end();
     }
 
-    http.createServer( onRequest ).listen(80);
+    http.createServer( onRequest ).listen( port );
     console.log("server started");
 }
 
