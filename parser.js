@@ -37,7 +37,7 @@ function getCalendar( resolve, reject )
 
 
         let names = ['this Monday', 'this Tuesday', 'this Wednesday', 'this Thursday', 'this Friday', 'this Saturday', 'next Sunday'];
-        let formatDate = date => new Date( moment.tz( date.toUTCString(), timezone ).format() );
+        let formatDate = date => new Date( date.toLocaleString('en-US', {timezone: timezone}) );
 
         // console.log( formatDate( Date.create(names[0] + ' ' + '7am' ).addHours(1) ) );
 
