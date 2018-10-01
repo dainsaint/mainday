@@ -1,7 +1,7 @@
 var icalToolkit = require('ical-toolkit');
 var request = require('request');
 var sugar = require('sugar');
-// var moment = require('moment-timezone')
+var moment = require('moment-timezone')
 // var Rx = require('rxjs');
 // var http = require('http');
 
@@ -37,7 +37,7 @@ function getCalendar( resolve, reject )
 
 
         let names = ['this Monday', 'this Tuesday', 'this Wednesday', 'this Thursday', 'this Friday', 'this Saturday', 'next Sunday'];
-        // let formatDate = date => new Date( moment.tz( date.toUTCString(), timezone ).format() );
+        let formatDate = date => new Date( moment.tz( date.toUTCString(), timezone ).format() );
 
         // console.log( formatDate( Date.create(names[0] + ' ' + '7am' ).addHours(1) ) );
 
@@ -46,8 +46,8 @@ function getCalendar( resolve, reject )
             .filter( line => line.match(/^[0-9]*[a|p]m/)) )
             .map( day => day.map( parseEvent ) )
             .map( (day, i) => day.map( event => ({
-                start: Date.create(names[i] + ' ' + event.time ),
-                end: Date.create(names[i] + ' ' + event.time ).addHours(1),
+                start: formatDate( Date.create(names[i] + ' ' + event.time ) ),
+                end: formatDate( Date.create(names[i] + ' ' + event.time ).addHours(1) ),
                 transp: 'OPAQUE',
                 summary: event.label,
                 alarms: event.reminder ? [60,30,10] : [],
