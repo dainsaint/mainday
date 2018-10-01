@@ -3,17 +3,18 @@ var server = require("./server");
 var parser = require("./parser");
 
 
-
-function serveCalendar( icsContent )
+function doServe( response )
 {
-    server.start( response => response.write(icsContent) );
+    new Promise( parser.getCalendar )
+        .then( icsContent => {
+            response.write( icsContent )
+            response.end();
+        } );
 }
 
 
-new Promise( parser.getCalendar )
-    .then( serveCalendar );
 
-
+server.start( doServe );
 
 
 
