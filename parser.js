@@ -2,8 +2,6 @@ var icalToolkit = require('ical-toolkit');
 var request = require('request');
 var sugar = require('sugar');
 var moment = require('moment-timezone')
-// var Rx = require('rxjs');
-// var http = require('http');
 
 var builder = icalToolkit.createIcsFileBuilder();
 var url = "https://dl.dropbox.com/s/edw53lkvjoawmtj/This%20Week.md?dl=1";
@@ -33,13 +31,8 @@ function getCalendar( resolve, reject )
 
     function parseIntoIcal( text )
     {
-
-
-
         let names = ['this Monday', 'this Tuesday', 'this Wednesday', 'this Thursday', 'this Friday', 'this Saturday', 'next Sunday'];
-        let formatDate = date => new Date( date.toLocaleString('en-US', {timezone: timezone}) );
-
-        // console.log( formatDate( Date.create(names[0] + ' ' + '7am' ).addHours(1) ) );
+        let formatDate = date => new Date( moment.tz( date.format("%Y-%m-%d %H:%M"), timezone ) );
 
         var days = text.match(/#[^#]*/gs)
             .map( day => day.split('\n')
