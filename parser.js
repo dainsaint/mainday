@@ -36,7 +36,7 @@ function getCalendar( resolve, reject )
 
         var days = text.match(/#[^#]*/gs)
             .map( day => day.split('\n')
-            .filter( line => line.match(/^[0-9]*[a|p]m/)) )
+            .filter( line => line.match(/^[0-9]*:?[0-9]*[a|p]m/)) )
             .map( day => day.map( parseEvent ) )
             .map( (day, i) => day.map( event => ({
                 start: formatDate( Date.create(names[i] + ' ' + event.time ) ),
@@ -56,7 +56,7 @@ function getCalendar( resolve, reject )
 
     function parseEvent( string )
     {
-        var parse = /(^[0-9]*[a|p]m)(!)?\s?([^@]*)(?:\s?@\s?([^!]*)?)?/;
+        var parse = /(^[0-9]*:?[0-9]*[a|p]m)(!)?\s?([^@]*)(?:\s?@\s?([^!]*)?)?/;
         var array = string.match( parse );//.map( ([match, time, label, location, reminder]) => time );
         var event = {};
         [, event.time, event.reminder, event.label, event.location] = array;
