@@ -60,7 +60,7 @@ function getCalendar( resolve, reject )
     function parseIntoIcalYear( text )
     {
         let formatDate = date => new Date( moment.tz( date.format("%Y-%m-%d %H:%M"), timezone ) );
-        let isValidEvent = line => line.match(/^[0-9]*:?[0-9]*[a|p]m/);
+        let isValidEvent = line => line.match(/^[0-9]*:?[0-9]*[a|p]m/) || line.match(/^\*/);
 
         var days = text.match(/#[^#]*/gs)
             .map( day => day.split('\n') )
@@ -76,10 +76,10 @@ function getCalendar( resolve, reject )
 
     function parseEvent( string )
     {
-        var parse = /(^[0-9]*:?[0-9]*[a|p]m)-?([0-9]*:?[0-9]*[a|p]m)?(!)?\s?([^@]*)(?:\s?@\s?([^!]*)?)?/;
+        var parse = /^(\*)?([0-9]*:?[0-9]*[a|p]m)?-?([0-9]*:?[0-9]*[a|p]m)?(!)?\s?([^@]*)(?:\s?@\s?([^!]*)?)?/;
         var array = string.match( parse );//.map( ([match, time, label, location, reminder]) => time );
         var event = {};
-        [, event.start, event.end, event.reminder, event.label, event.location] = array;
+        [, event.allDay, event.start, event.end, event.reminder, event.label, event.location] = array;
 
         return event;
     }
@@ -99,6 +99,7 @@ function getCalendar( resolve, reject )
           end: formatDate( endDate(event) ),
           transp: 'OPAQUE',
           summary: event.label,
+          allDay: event.allDay,
           alarms: event.reminder ? [60,30,10] : [],
           location: event.location
       }) );
