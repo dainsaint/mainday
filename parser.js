@@ -90,8 +90,8 @@ function getCalendar( resolve, reject )
       let formatDate = date => new Date( moment.tz( date.format("%Y-%m-%d %H:%M"), timezone ) );
 
       let date = Date.create( day.date );
-      let startDate = event => date.get( event.start );
-      let endDate = event => event.end ? date.get( event.end ) : date.get( event.start ).addHours(1);
+      let startDate = event => event.start ? date.get( event.start ) : date;
+      let endDate = event => event.end ? date.get( event.end ) : event.start ? date.get( event.start ).addHours(1) : date;
 
 
       return day.events.map( event => ({
