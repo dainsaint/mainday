@@ -6,6 +6,8 @@ var moment = require('moment-timezone')
 var builder = icalToolkit.createIcsFileBuilder();
 var url = "https://dl.dropbox.com/s/edw53lkvjoawmtj/This%20Week.md?dl=1";
 
+var calendarUrl = "https://www.dropbox.com/s/t98ndsld86h9g6a/Calendar.md?dl=1"
+
 
 sugar.extend();
 
@@ -23,7 +25,7 @@ function getCalendar( resolve, reject )
     function handleRequest( error, response, body )
     {
         if( !error && response.statusCode == 200 )
-            resolve( parseIntoIcal(body) );
+            resolve( parseIntoIcalYear(body) );
         else
             reject();
     }
@@ -54,17 +56,55 @@ function getCalendar( resolve, reject )
         return builder.toString();
     }
 
+
+    function parseIntoIcalYear( text )
+    {
+        let formatDate = date => new Date( moment.tz( date.format("%Y-%m-%d %H:%M"), timezone ) );
+        let isValidEvent = line => line.match(/^[0-9]*:?[0-9]*[a|p]m/);
+
+        var days = text.match(/#[^#]*/gs)
+            .map( day => day.split('\n') )
+            .map( ([date, ...events]) => ({date: date.match(/#\s*(.*)/)[1], events: events.filter( isValidEvent ).map( parseEvent ) }) )
+            .map( convertDay )
+            .flatten();
+
+        // console.log( days );
+        // return days;
+        builder.events = days;
+        return builder.toString();
+    }
+
     function parseEvent( string )
     {
-        var parse = /(^[0-9]*:?[0-9]*[a|p]m)(!)?\s?([^@]*)(?:\s?@\s?([^!]*)?)?/;
+        var parse = /(^[0-9]*:?[0-9]*[a|p]m)-?([0-9]*:?[0-9]*[a|p]m)?(!)?\s?([^@]*)(?:\s?@\s?([^!]*)?)?/;
         var array = string.match( parse );//.map( ([match, time, label, location, reminder]) => time );
         var event = {};
-        [, event.time, event.reminder, event.label, event.location] = array;
+        [, event.start, event.end, event.reminder, event.label, event.location] = array;
 
         return event;
     }
 
-    request.get( url, handleRequest );
+    function convertDay( day )
+    {
+
+      let formatDate = date => new Date( moment.tz( date.format("%Y-%m-%d %H:%M"), timezone ) );
+
+      let date = Date.create( day.date );
+      let startDate = event => date.get( event.start );
+      let endDate = event => event.end ? date.get( event.end ) : date.get( event.start ).addHours(1);
+
+
+      return day.events.map( event => ({
+          start: formatDate( startDate(event) ),
+          end: formatDate( endDate(event) ),
+          transp: 'OPAQUE',
+          summary: event.label,
+          alarms: event.reminder ? [60,30,10] : [],
+          location: event.location
+      }) );
+    }
+
+    request.get( calendarUrl, handleRequest );
 
 }
 
