@@ -36,9 +36,9 @@ function getCalendar( resolve, reject )
         let names = ['this Monday', 'this Tuesday', 'this Wednesday', 'this Thursday', 'this Friday', 'this Saturday', 'next Sunday'];
         let formatDate = date => new Date( moment.tz( date.format("%Y-%m-%d %H:%M"), timezone ) );
 
-        var days = text.match(/#[^#]*/gs)
+        var days = text.match(/^#[^#]*/gs)
             .map( day => day.split('\n')
-            .filter( line => line.match(/^[0-9]*:?[0-9]*[a|p]m/)) )
+              .filter( line => line.match(/^[0-9]*:?[0-9]*[a|p]m/)) )
             .map( day => day.map( parseEvent ) )
             .map( (day, i) => day.map( event => ({
                 start: formatDate( Date.create(names[i] + ' ' + event.time ) ),
@@ -62,9 +62,9 @@ function getCalendar( resolve, reject )
         let formatDate = date => new Date( moment.tz( date.format("%Y-%m-%d %H:%M"), timezone ) );
         let isValidEvent = line => line.match(/^[0-9]*:?[0-9]*[a|p]m/) || line.match(/^\*/);
 
-        var days = text.match(/#[^#]*/gs)
+        var days = text.match(/#([^#][^ ]?)*/gs)
             .map( day => day.split('\n') )
-            .map( ([date, ...events]) => ({date: date.match(/#\s*(.*)/)[1], events: events.filter( isValidEvent ).map( parseEvent ) }) )
+            .map( ([date, ...events]) => ({date: date.match(/^#\s*(.*)/)[1], events: events.filter( isValidEvent ).map( parseEvent ) }) )
             .map( convertDay )
             .flatten();
 
