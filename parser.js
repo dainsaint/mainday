@@ -62,7 +62,7 @@ function getCalendar( resolve, reject )
         let formatDate = date => new Date( moment.tz( date.format("%Y-%m-%d %H:%M"), timezone ) );
         let isValidEvent = line => line.match(/^[0-9]*:?[0-9]*[a|p]m/) || line.match(/^\*/);
 
-        var days = text.match(/#([^#][^ ]?)*/gs)
+        var days = text.match(/#[^#]*/gs)
             .map( day => day.split('\n') )
             .map( ([date, ...events]) => ({date: date.match(/^#\s*(.*)/)[1], events: events.filter( isValidEvent ).map( parseEvent ) }) )
             .map( convertDay )
