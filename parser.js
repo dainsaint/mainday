@@ -1,12 +1,18 @@
 var icalToolkit = require('ical-toolkit');
-var request = require('request');
+var request = require('request-promise-native');
 var sugar = require('sugar');
-var moment = require('moment-timezone')
+var moment = require('moment-timezone');
+var Observable = require('rxjs');
 
 var builder = icalToolkit.createIcsFileBuilder();
-var url = "https://dl.dropbox.com/s/edw53lkvjoawmtj/This%20Week.md?dl=1";
+var thisWeekUrl = "https://dl.dropbox.com/s/edw53lkvjoawmtj/This%20Week.md?dl=1";
 
 var calendarUrl = "https://www.dropbox.com/s/t98ndsld86h9g6a/Calendar.md?dl=1"
+
+var calendars = [
+    "https://www.dropbox.com/s/t98ndsld86h9g6a/Calendar.txt?dl=1",
+    "https://www.dropbox.com/s/95v2t4r956jf90c/Past%20Calendar.txt?dl=1"
+]
 
 
 sugar.extend();
@@ -70,8 +76,10 @@ function getCalendar( resolve, reject )
 
         // console.log( days );
         // return days;
-        builder.events = days;
-        return builder.toString();
+        // builder.events = days;
+        // return builder.toString();
+
+        return days;
     }
 
     function parseEvent( string )
@@ -105,7 +113,18 @@ function getCalendar( resolve, reject )
       }) );
     }
 
-    request.get( calendarUrl, handleRequest );
+
+    Observable.forkJoin(
+        calendars
+          .map( cal => Observable.from( request.get( cal ) ) )
+      )
+      .subscribe( data => {
+        let days = data.map( parseIntoIcalYear ).flatten()
+        builder.events = days;
+        resolve( builder.toString() )
+      } )
+
+    // request.get( calendarUrl, handleRequest );
 
 }
 

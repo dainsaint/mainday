@@ -21,6 +21,9 @@
     "moment-timezone": "^0.5.21",
     "nodemon": "^1.18.4",
     "request": "^2.88.0",
+    "request-promise-native": "^1.0.5",
+    "rx-ajax": "^0.1.2",
+    "rxjs": "^6.3.3",
     "sugar": "^2.0.4"
   }
 }
