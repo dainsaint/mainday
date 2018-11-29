@@ -10,8 +10,9 @@ var thisWeekUrl = "https://dl.dropbox.com/s/edw53lkvjoawmtj/This%20Week.md?dl=1"
 var calendarUrl = "https://www.dropbox.com/s/t98ndsld86h9g6a/Calendar.md?dl=1"
 
 var calendars = [
-    "https://www.dropbox.com/s/t98ndsld86h9g6a/Calendar.txt?dl=1",
-    "https://www.dropbox.com/s/95v2t4r956jf90c/Past%20Calendar.txt?dl=1"
+    "https://www.dropbox.com/s/t98ndsld86h9g6a/Present.txt?dl=1",
+    "https://www.dropbox.com/s/95v2t4r956jf90c/Past.txt?dl=1",
+    "https://www.dropbox.com/s/8197rjacgjnq55l/Future.txt?dl=1"
 ]
 
 
