@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Calender helper",
   "main": "server.js",
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "start": "./node_modules/nodemon/bin/nodemon.js server.js --exec 'node'"
   },
